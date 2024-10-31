@@ -26,7 +26,7 @@ nn <space> <nop>
 let mapleader=" "
 " }}}
 
-" statusbar {{{
+" status bar {{{
 set laststatus=2
 set statusline=\File:\%f\ Buffer:\%n
 set statusline+=%=
@@ -35,9 +35,9 @@ set statusline+=\Line:\%l/%L\ Progress:\%p\%%
 
 " ru keys {{{
 set keymap=russian-jcukenwin
+" set spell spelllang=ru_yo,en_us
 set iminsert=0
 set imsearch=0
-highlight lCursor guifg=NONE guibg=Cyan
 " }}}
 
 " mappings {{{
@@ -49,15 +49,15 @@ nn <leader>vs :source $MYVIMRC<cr>
 
 nn <leader>/ I//<esc>
 
-" quickfix
-" nnoremap <leader>ff :execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr> 
-nnoremap <leader>ff :Files<cr>
-nnoremap <leader>fw :Ngr 
+" search
+nnoremap <leader>ff :find 
+nnoremap <leader>fw :Rg 
 nnoremap <leader>fb :Buff<cr>
 nnoremap <leader>fo :copen<cr>
 nnoremap <silent> <leader>fc :cclose<cr>
 nnoremap <silent> <leader>fn :cnext<cr>
 nnoremap <silent> <leader>fp :cprevious<cr>
+nnoremap <silent> <c-[> :MakeTags<cr>
 
 " buffer
 noremap <leader>bf <esc><c-w>\| <c-w>_
@@ -69,19 +69,15 @@ noremap <c-h> <c-w>h
 noremap <c-j> <c-w>j
 noremap <c-k> <c-w>k
 
-nnoremap <leader>tl :vsplit<cr>
-
 " build
-" nnoremap <leader>cc :!!RUSTFLAGS=-Awarnings cargo check<cr>
-nnoremap <leader>cc :!RUSTFLAGS=-Awarnings cargo check<cr>
-nnoremap <leader>cb :!RUSTFLAGS=-Awarnings cargo build<cr>
-nnoremap <leader>cr :!RUSTFLAGS=-Awarnings cargo run<cr>
-nnoremap <leader>ct :!RUSTFLAGS=-Awarnings cargo test 
-nnoremap <silent> <leader>cf :w<cr>:!cargo fmt<cr>:e<cr>
-
+nnoremap <leader>cc :Ccheck<cr>
+nnoremap <leader>cb :Cbuild<cr>
+nnoremap <leader>cr :Crun<cr>
+nnoremap <leader>ct :Ctest
+nnoremap <silent> <leader>cf :RustFmt<cr>
 " }}}
 
-" abbreviatons {{{
+" abbreviations {{{
 ia pf pub fn
 ia ps pub struct
 " }}}
@@ -101,9 +97,6 @@ endif
 
 call plug#begin()
 
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
 call plug#end()
 
 " plugins setup
@@ -115,11 +108,14 @@ set path+=**
 
 set wildignore=**/.git/**,**/.cargo/**,**/.gradle/**,**/.xwin-cache/**
 set wildignore+=**/assets/**,**/target/**,**/output/**
+set wildignore+=tags
 
 set wildmenu
 set wildmode=full:lastused
 " set wildoptions=pum
 set wildoptions=fuzzy
 
-command! -nargs=+ Ngr silent execute 'grep! -R --exclude-dir=".*" --exclude-dir={assets,target,output} --exclude="**\*.swp" <args> $PWD' | copen | redraw!
+command! -nargs=+ Ngr silent execute 'grep! -R --exclude-dir=".*" --exclude-dir={assets,target,output} --exclude="**\*.swp" --exclude=tags <args> $PWD' | copen | redraw!
+
+command! MakeTags silent execute '!ctags -R --exclude=assets --exclude=target --exclude=output .' | redraw!
 " }}}
