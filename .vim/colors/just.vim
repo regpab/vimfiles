@@ -47,7 +47,7 @@ hi Changed ctermfg=0
 hi Removed ctermfg=0
 
 hi Directory ctermfg=0
-hi CursorLine ctermfg=0 ctermbg=NONE
+hi CursorLine ctermfg=0 ctermbg=15
 hi EndOfBuffer ctermfg=0
 hi ErrorMsg ctermfg=1 ctermbg=NONE
 hi Folded ctermfg=15 ctermbg=8

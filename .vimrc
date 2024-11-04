@@ -35,34 +35,37 @@ set statusline+=\Line:\%l/%L\ Progress:\%p\%%
 
 " ru keys {{{
 set keymap=russian-jcukenwin
-" set spell spelllang=ru_yo,en_us
+autocmd FileType text setlocal spell spelllang=ru_yo,en_us
 set iminsert=0
 set imsearch=0
 " }}}
 
 " mappings {{{
-nnoremap <silent> <esc><esc> :noh<cr>
+nn <esc><esc> :noh<cr>
 
 no <leader>s :w<cr>
 nn <leader>ve :vsplit $MYVIMRC<cr>
-nn <leader>vs :source $MYVIMRC<cr>
+nn <leader>vs :source $MYVIMRC<cr>:colorscheme just<cr>
+nn <leader>vc :vsplit ~/.vim/colors/just.vim<cr>
 
 nn <leader>/ I//<esc>
 
+nnoremap <leader>h :term<cr> 
+
 " search
 nnoremap <leader>ff :find 
-nnoremap <leader>fw :Rg 
-nnoremap <leader>fb :Buff<cr>
+nnoremap <leader>fw :Ngr 
+
 nnoremap <leader>fo :copen<cr>
 nnoremap <silent> <leader>fc :cclose<cr>
 nnoremap <silent> <leader>fn :cnext<cr>
 nnoremap <silent> <leader>fp :cprevious<cr>
-nnoremap <silent> <c-[> :MakeTags<cr>
+nnoremap <silent> <leader>fm :MakeTags<cr>
 
 " buffer
 noremap <leader>bf <esc><c-w>\| <c-w>_
 noremap <leader>br <esc><c-w>=
-noremap <c-n> :Rex<cr>
+noremap <leader>n :Rex<cr>
 
 noremap <c-l> <c-w>l
 noremap <c-h> <c-w>h
@@ -73,7 +76,7 @@ noremap <c-k> <c-w>k
 nnoremap <leader>cc :Ccheck<cr>
 nnoremap <leader>cb :Cbuild<cr>
 nnoremap <leader>cr :Crun<cr>
-nnoremap <leader>ct :Ctest
+nnoremap <leader>ct :Ctest 
 nnoremap <silent> <leader>cf :RustFmt<cr>
 " }}}
 
@@ -104,18 +107,21 @@ call plug#end()
 " }}}
 
 " search {{{
-set path+=**
+set path+=src/**
 
-set wildignore=**/.git/**,**/.cargo/**,**/.gradle/**,**/.xwin-cache/**
-set wildignore+=**/assets/**,**/target/**,**/output/**
+set wildignore=*/.git/*,*/.cargo/*,*/.gradle/*,*/.xwin-cache/*
+set wildignore+=*/assets/*,*/target/*,*/output/*
 set wildignore+=tags
+set wildignore+=*.dex,*.class*,*/build/*
 
 set wildmenu
 set wildmode=full:lastused
 " set wildoptions=pum
 set wildoptions=fuzzy
 
-command! -nargs=+ Ngr silent execute 'grep! -R --exclude-dir=".*" --exclude-dir={assets,target,output} --exclude="**\*.swp" --exclude=tags <args> $PWD' | copen | redraw!
+" command! -nargs=+ Ngr silent execute 'grep! -R --exclude-dir=".*" --exclude-dir={assets,target,output} --exclude="**\*.swp" --exclude=tags <args> $PWD' | copen | redraw!
 
-command! MakeTags silent execute '!ctags -R --exclude=assets --exclude=target --exclude=output .' | redraw!
+command! -nargs=+ Ngr execute 'Rg -i -g "!tags" <args>'
+
+command! MakeTags execute '!ctags -R --exclude=assets --exclude=target --exclude=output --exclude=build .' | redraw!
 " }}}
