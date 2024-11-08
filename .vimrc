@@ -4,14 +4,16 @@ set nocompatible
 set number
 set relativenumber
 
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 
 set ignorecase
 set hlsearch incsearch
 
 set cursorline
+
+set lazyredraw
 
 set splitbelow splitright
 
@@ -72,6 +74,9 @@ noremap <c-h> <c-w>h
 noremap <c-j> <c-w>j
 noremap <c-k> <c-w>k
 
+noremap <leader>cy "+y
+noremap <leader>cp "+p
+
 " build
 nnoremap <leader>cc :Ccheck<cr>
 nnoremap <leader>cb :Cbuild<cr>
@@ -107,7 +112,8 @@ call plug#end()
 " }}}
 
 " search {{{
-set path+=src/**
+"set path+=g:pathy_path
+"let g:pathy_exclude = []
 
 set wildignore=*/.git/*,*/.cargo/*,*/.gradle/*,*/.xwin-cache/*
 set wildignore+=*/assets/*,*/target/*,*/output/*
