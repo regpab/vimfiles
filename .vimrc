@@ -17,6 +17,9 @@ set lazyredraw
 
 set splitbelow splitright
 
+let g:netrw_banner=0
+let g:netrw_liststyle=1
+
 colorscheme just
 
 set foldmethod=marker
@@ -26,13 +29,23 @@ set backspace=indent,eol,start
 
 nn <space> <nop>
 let mapleader=" "
+
+set signcolumn=number
+
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+" Fix backspace
+set t_kb=
 " }}}
 
 " status bar {{{
 set laststatus=2
 set statusline=\File:\%f\ Buffer:\%n
 set statusline+=%=
-set statusline+=\Line:\%l/%L\ Progress:\%p\%%
+"set statusline+=\Line:\%l/%L\ Progress:\%p\%%
+set statusline+=\Progress:\%p\%% 
+set statusline+=\ Codeium:\%3{codeium#GetStatusString()}
 " }}}
 
 " ru keys {{{
@@ -78,16 +91,38 @@ noremap <leader>cy "+y
 noremap <leader>cp "+p
 
 " build
+autocmd FileType rust set makeprg=cargo\ check\ --message-format\ short
+nnoremap <leader>cm :make<cr>
 nnoremap <leader>cc :Ccheck<cr>
 nnoremap <leader>cb :Cbuild<cr>
 nnoremap <leader>cr :Crun<cr>
 nnoremap <leader>ct :Ctest 
 nnoremap <silent> <leader>cf :RustFmt<cr>
+
+" IDE tools
+inoremap <silent><expr> <Tab>
+      \ getline('.') =~ '^\s*$' ? "\<Tab>" : pumvisible() ? "\<C-n>" : "\<C-x><C-o>"
+
+inoremap <silent><expr> <S-Tab>
+      \ getline('.') =~ '^\s*$' ? "\<S-Tab>" : pumvisible() ? "\<C-p>" : "\<C-x><C-o>"
+
+nnoremap <C-n> :ALENext<cr>
+nnoremap <C-p> :ALEPrevious<cr>
+nnoremap <leader>a :ALECodeAction<cr>
+
+" Codeium
+imap <script><silent><nowait><expr> <C-g> codeium#Accept()
+imap <script><silent><nowait><expr> <C-h> codeium#AcceptNextWord()
+imap <script><silent><nowait><expr> <C-l> codeium#AcceptNextLine()
+imap <C-j>   <Cmd>call codeium#CycleCompletions(1)<CR>
+imap <C-k>   <Cmd>call codeium#CycleCompletions(-1)<CR>
+imap <C-x>   <Cmd>call codeium#Clear()<CR>
 " }}}
 
 " abbreviations {{{
 ia pf pub fn
 ia ps pub struct
+cabbrev vsf vert sfind
 " }}}
 
 " plugins {{{
@@ -104,11 +139,23 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
 endif
 
 call plug#begin()
-
+"	Plug 'regpab/pathy.vim'
+	Plug 'dense-analysis/ale'
+	Plug 'Exafunction/codeium.vim'
 call plug#end()
 
 " plugins setup
-
+set omnifunc=ale#completion#OmniFunc
+let g:ale_sign_column_always = 1
+let g:ale_set_highlights = 0
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
+let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_filetype_changed = 0
+let g:codeium_disable_bindings = 1
+let g:codeium_enabled = v:false
 " }}}
 
 " search {{{

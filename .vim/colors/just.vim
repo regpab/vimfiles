@@ -66,3 +66,6 @@ hi ErrorMsg ctermfg=0
 hi Visual ctermbg=8 ctermfg=15
 hi StatusLineNC ctermbg=7
 hi StatusLineTermNC ctermfg=8
+
+hi ALEErrorSign ctermbg=1
+hi ALEWarningSign ctermbg=7

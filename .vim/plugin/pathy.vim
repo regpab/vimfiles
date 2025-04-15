@@ -1,5 +1,6 @@
 function! g:PathyGen(...)
-	let g:pathy_exclude = get(g:, 'pathy_exclude', [])
+	let exclude_defaults =  ["output", "target", "gradle", "build"]
+	let g:pathy_exclude = get(g:, 'pathy_exclude', exclude_defaults)
 	let g:pathy_depth = get(g:, 'pathy_depth', 2)
 	let g:pathy_exclude_override = get(g:, 'pathy_exclude_override', 0)
 	let g:pathy_path_override = get(g:, 'pathy_path_override', 0)
@@ -8,8 +9,7 @@ function! g:PathyGen(...)
 	let force_exclude_override = get(a:, 2, 0)
 
 	if g:pathy_exclude_override == 0 && force_exclude_override == 0
-		let exclude = ["output", "target", "gradle", "build"]
-		let exclude = extend(g:pathy_exclude, exclude)
+		let exclude = extend(g:pathy_exclude, exclude_defaults)
 	else
 		let exclude = g:pathy_exclude
 	endif
