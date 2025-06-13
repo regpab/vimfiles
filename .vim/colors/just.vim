@@ -6,7 +6,6 @@ if exists('g:syntax_on')
 endif
 
 let g:colors_name = 'just'
-" rerwerew
 hi Comment ctermfg=8 cterm=bold
 hi Constant ctermfg=0
 hi String	ctermfg=2
@@ -46,6 +45,7 @@ hi Added ctermfg=0
 hi Changed ctermfg=0
 hi Removed ctermfg=0
 
+hi MatchParen ctermfg=0 ctermbg=2
 hi Directory ctermfg=0
 hi CursorLine ctermfg=0 ctermbg=15
 hi EndOfBuffer ctermfg=0
@@ -58,14 +58,15 @@ hi CursorLineNr ctermfg=0
 hi MoreMsg ctermfg=2
 hi NonText ctermfg=8
 hi PmenuThumb ctermfg=15
-hi CurSearch ctermfg=15 ctermbg=0
+hi CurSearch ctermfg=0 ctermbg=3
+hi Search ctermfg=0 ctermbg=7
 hi QuickFixLine ctermfg=15 ctermbg=0
 hi SpecialKey ctermfg=0
 hi WarningMsg ctermfg=1
 hi ErrorMsg ctermfg=0
-hi Visual ctermbg=8 ctermfg=15
+hi Visual ctermbg=11 ctermfg=0
 hi StatusLineNC ctermbg=7
-hi StatusLineTermNC ctermfg=8
+hi StatusLineTermNC ctermfg=7
 
 hi ALEErrorSign ctermbg=1
 hi ALEWarningSign ctermbg=7

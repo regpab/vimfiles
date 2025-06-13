@@ -20,7 +20,7 @@ set splitbelow splitright
 let g:netrw_banner=0
 let g:netrw_liststyle=1
 
-colorscheme just
+colorscheme justdark
 
 set foldmethod=marker
 set foldlevelstart=0
@@ -45,7 +45,14 @@ set statusline=\File:\%f\ Buffer:\%n
 set statusline+=%=
 "set statusline+=\Line:\%l/%L\ Progress:\%p\%%
 set statusline+=\Progress:\%p\%% 
-set statusline+=\ Codeium:\%3{codeium#GetStatusString()}
+set statusline+=\%{ALEState()}
+function! ALEState() abort
+	return g:ale_enabled ? " [ALE]" : ""
+endfunction
+set statusline+=\%{CodeiumState()}
+function! CodeiumState() abort
+	return g:codeium_enabled ? " [CODEIUM]" : ""
+endfunction
 " }}}
 
 " ru keys {{{
@@ -60,8 +67,8 @@ nn <esc><esc> :noh<cr>
 
 no <leader>s :w<cr>
 nn <leader>ve :vsplit $MYVIMRC<cr>
-nn <leader>vs :source $MYVIMRC<cr>:colorscheme just<cr>
-nn <leader>vc :vsplit ~/.vim/colors/just.vim<cr>
+nn <leader>vs :source $MYVIMRC<cr>:colorscheme justdark<cr>
+nn <leader>vc :vsplit ~/.vim/colors/justdark.vim<cr>
 
 nn <leader>/ I//<esc>
 
@@ -108,7 +115,16 @@ inoremap <silent><expr> <S-Tab>
 
 nnoremap <C-n> :ALENext<cr>
 nnoremap <C-p> :ALEPrevious<cr>
-nnoremap <leader>a :ALECodeAction<cr>
+nnoremap <leader>at :ALEToggle<cr>
+nnoremap <leader>aa :ALECodeAction<cr>
+nnoremap <leader>al :ALELint<cr>
+nnoremap <leader>ah :ALEHover<cr>
+nnoremap <leader>ad :ALEGoToDefinition<cr>
+nnoremap <leader>au :ALEFindReferences<cr>
+nnoremap <leader>ar :ALERename<cr>
+nnoremap <leader>as :ALESymbolSearch 
+nnoremap <leader>ai :ALEInfo<cr> 
+nnoremap <leader>aq :ALEPopulateQuickfix<cr>
 
 " Codeium
 imap <script><silent><nowait><expr> <C-g> codeium#Accept()
@@ -142,6 +158,7 @@ call plug#begin()
 "	Plug 'regpab/pathy.vim'
 	Plug 'dense-analysis/ale'
 	Plug 'Exafunction/codeium.vim'
+"	Plug 'sainnhe/everforest'
 call plug#end()
 
 " plugins setup
@@ -154,8 +171,18 @@ let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_filetype_changed = 0
+let g:ale_lint_on_save = 1
+
 let g:codeium_disable_bindings = 1
 let g:codeium_enabled = v:false
+
+" To run everforest:
+" if has('termguicolors')
+"          set termguicolors
+"        endif
+"let g:everforest_background="hard"
+"set background=dark
+"colorscheme everforest
 " }}}
 
 " search {{{
