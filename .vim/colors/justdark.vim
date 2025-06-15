@@ -15,13 +15,13 @@ hi Number	ctermfg=2*
 hi Boolean	ctermfg=2*
 hi Float ctermfg=2*
 hi Identifier ctermfg=2*
-hi Function ctermfg=2*
+hi Function ctermfg=2
 hi Statement ctermfg=2*
 hi Conditional ctermfg=2*
 hi Repeat ctermfg=2*
-hi Label ctermfg=2*
+hi Label ctermfg=2* 
 hi Operator ctermfg=2*
-hi Keyword ctermfg=2*
+hi Keyword ctermfg=2
 hi Exception ctermfg=2*
 hi PreProc ctermfg=2*
 hi Include ctermfg=2*
@@ -45,6 +45,7 @@ hi Todo ctermfg=0 ctermbg=10
 hi Added ctermfg=2*
 hi Changed ctermfg=2*
 hi Removed ctermfg=2*
+hi Title ctermfg=3
 
 hi MatchParen ctermfg=0 ctermbg=10
 hi Directory ctermfg=2
@@ -54,11 +55,10 @@ hi ErrorMsg ctermfg=2* ctermbg=NONE
 hi Folded ctermfg=9 ctermbg=0
 hi FoldColumn ctermfg=2* ctermbg=NONE
 hi SignColumn ctermfg=2* ctermbg=NONE
-hi LineNr ctermfg=2 ctermbg=0
-hi CursorLineNr ctermfg=2 cterm=bold
+hi LineNr ctermfg=2 ctermbg=0 cterm=italic
+hi CursorLineNr ctermfg=2 ctermbg=0 cterm=bold
 hi MoreMsg ctermfg=2
 hi NonText ctermfg=9
-hi PmenuThumb ctermfg=2*
 hi CurSearch ctermfg=0 ctermbg=3
 hi Search ctermfg=0 ctermbg=10
 hi QuickFixLine ctermfg=0 ctermbg=10
@@ -66,10 +66,10 @@ hi SpecialKey ctermfg=2*
 hi WarningMsg ctermfg=2*
 hi ErrorMsg ctermfg=2*
 hi Visual ctermbg=3 ctermfg=0
-hi Statusline ctermbg=0 ctermfg=2 cterm=italic
-hi StatusLineNC ctermbg=10 ctermfg=0 
-hi StatusLineTerm ctermbg=0 ctermfg=1 cterm=italic
-hi StatusLineTermNC ctermbg=0 ctermfg=9 
+hi Statusline ctermbg=10 ctermfg=0 cterm=NONE
+hi StatusLineNC ctermbg=0 ctermfg=2 
+hi StatusLineTerm ctermbg=9 ctermfg=0 cterm=NONE
+hi StatusLineTermNC ctermbg=1 ctermfg=0 
 
 hi SpellBad ctermfg=0 ctermbg=1
 hi SpellCap ctermfg=0 ctermbg=2
