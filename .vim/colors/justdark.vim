@@ -47,7 +47,7 @@ hi Changed ctermfg=2*
 hi Removed ctermfg=2*
 hi Title ctermfg=3
 
-hi MatchParen ctermfg=0 ctermbg=10
+hi MatchParen ctermfg=9 ctermbg=0
 hi Directory ctermfg=2
 hi CursorLine ctermfg=2 ctermbg=0*
 hi EndOfBuffer ctermfg=2

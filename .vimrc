@@ -45,6 +45,16 @@ set statusline=\File:\%f\ Buffer:\%n
 set statusline+=%=
 "set statusline+=\Line:\%l/%L\ Progress:\%p\%%
 set statusline+=\Progress:\%p\%% 
+"set statusline+=\ %{GradleState()}
+let g:gradle_glyph_gradle='[GRADLE]'
+let g:gradle_glyph_android='[ANDROID]'
+function! GradleState() abort
+	if gradle#running()
+		return "[RUNNING]"
+	else
+		return lightline#gradle#project()
+	endif
+endfunction
 set statusline+=\%{ALEState()}
 function! ALEState() abort
 	return g:ale_enabled ? " [ALE]" : ""
@@ -158,6 +168,7 @@ call plug#begin()
 "	Plug 'regpab/pathy.vim'
 	Plug 'dense-analysis/ale'
 	Plug 'Exafunction/codeium.vim'
+	Plug 'hsanson/vim-android'
 "	Plug 'sainnhe/everforest'
 call plug#end()
 
@@ -173,6 +184,30 @@ let g:ale_lint_on_enter = 0
 let g:ale_lint_on_filetype_changed = 0
 let g:ale_lint_on_save = 1
 
+"let g:ale_java_eclipselsp_path = '$HOME/jdt-language-server'
+"let g:ale_java_eclipselsp_executable = '/usr/libexec/java'
+"let g:ale_completion_autoimport = 1
+"let g:ale_completion_enabled = 1
+"let g:ale_hover_to_floating_preview = 1
+"let g:gradle_loclist_show = 0
+"let g:gradle_show_signs = 0
+"let g:ale_linters = {
+"     \ 'xml': ['android'],
+"     \ 'groovy': ['android'],
+"     \ 'java': ['android', 'checkstyle', 'eclipselsp'],
+"     \ 'kotlin': ['android', 'ktlint', 'kotlinc', 'kotlin-lanuage-server']
+" \ }
+"let g:ale_fixers = {
+"\	'kotlin': ['ktlint']
+"\}
+"let g:ale_kotlin_kotlin_language_server_executable = 'kotlin-language-server'
+"let g:ale_kotlin_kotlin_language_server_config = {
+"\   'trace': 'verbose',  
+"\   'kotlin': {
+"\     'compiler': { 'jvm': { 'target': '17' } },  
+"\   },
+"\}
+
 let g:codeium_disable_bindings = 1
 let g:codeium_enabled = v:false
 
@@ -183,6 +218,8 @@ let g:codeium_enabled = v:false
 "let g:everforest_background="hard"
 "set background=dark
 "colorscheme everforest
+
+let g:android_sdk_path="$HOME/Library/Android/sdk"
 " }}}
 
 " search {{{
