@@ -26,7 +26,9 @@ function! g:PathyGen(...)
 		call add(dirs, dir .. "/")
 
 		let subdirs = split(system("echo " .. dir .. "/*/", ""))
+
 		if !empty(subdirs)
+			call filter(subdirs, 'len(split(v:val,"/"))>1')
 			call map(subdirs, 'split(v:val,"/")[1]')
 			call filter(subdirs, 'index(exclude,v:val)<0')
 			call map(subdirs, 'dir .. "/" .. v:val .. "/**/"')

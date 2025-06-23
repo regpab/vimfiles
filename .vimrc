@@ -169,6 +169,7 @@ call plug#begin()
 	Plug 'dense-analysis/ale'
 	Plug 'Exafunction/codeium.vim'
 	Plug 'hsanson/vim-android'
+	Plug 'https://github.com/pimalaya/himalaya-vim'
 "	Plug 'sainnhe/everforest'
 call plug#end()
 
