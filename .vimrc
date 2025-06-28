@@ -55,10 +55,31 @@ function! GradleState() abort
 		return lightline#gradle#project()
 	endif
 endfunction
-set statusline+=\%{ALEState()}
-function! ALEState() abort
-	return g:ale_enabled ? " [ALE]" : ""
+set statusline+=\ %{CocState()}
+	function! CocState() abort
+	if coc#status() != ""
+		return " [" . coc#status() . get(b:,'coc_current_function','') . "]"
+	else 
+		return ""
 endfunction
+" set statusline+=\ %{ALEState()}
+"function! ALEState() abort
+"	if g:ale_enabled
+"		let l:counts = ale#statusline#Count(bufnr(''))
+"
+"		let l:all_errors = l:counts.error + l:counts.style_error
+"		let l:all_non_errors = l:counts.total - l:all_errors
+"
+"		return l:counts.total == 0 ? '[ALE]' : printf(
+"					\ '[%dW %dE]',
+"					\ all_non_errors,
+"					\ all_errors
+"					\)
+"	else 
+"		return ""
+"	endif
+"	return g:ale_enabled ? " [ALE]" : ""
+"endfunction
 set statusline+=\%{CodeiumState()}
 function! CodeiumState() abort
 	return g:codeium_enabled ? " [CODEIUM]" : ""
@@ -114,27 +135,59 @@ nnoremap <leader>cc :Ccheck<cr>
 nnoremap <leader>cb :Cbuild<cr>
 nnoremap <leader>cr :Crun<cr>
 nnoremap <leader>ct :Ctest 
-nnoremap <silent> <leader>cf :RustFmt<cr>
+"nnoremap <silent> <leader>cf :RustFmt<cr>
+nnoremap <silent> <leader>cf :call CocActionAsync('format')<cr>
 
 " IDE tools
 inoremap <silent><expr> <Tab>
+			\ coc#pum#visible() ? coc#pum#next(1) :
+			\ CheckBackspace() ? "\<Tab>" :
+			\ coc#refresh()
+inoremap <expr><S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1] =~# '\s'
+endfunction
+
+nnoremap <C-n> <Plug>(coc-diagnostic-prev)
+nnoremap <C-p> <Plug>(coc-diagnostic-next)
+nnoremap <leader>aa <Plug>(coc-codeaction-cursor)
+nnoremap <leader>af <Plug>(coc-fix-current)
+nnoremap <leader>ad <Plug>(coc-definition)
+nnoremap <leader>au <Plug>(coc-references)
+nnoremap <leader>ar <Plug>(coc-rename)
+nnoremap <leader>ai :call ShowDocumentation()<CR>
+function! ShowDocumentation()
+	if CocAction('hasProvider', 'hover')
+		call CocActionAsync('doHover')
+	else
+		call feedKeys('K', 'in')
+	endif
+endfunction
+
+" OLD Ale config
+"inoremap <silent><expr> <Tab>
       \ getline('.') =~ '^\s*$' ? "\<Tab>" : pumvisible() ? "\<C-n>" : "\<C-x><C-o>"
 
-inoremap <silent><expr> <S-Tab>
+"inoremap <silent><expr> <S-Tab>
       \ getline('.') =~ '^\s*$' ? "\<S-Tab>" : pumvisible() ? "\<C-p>" : "\<C-x><C-o>"
 
-nnoremap <C-n> :ALENext<cr>
-nnoremap <C-p> :ALEPrevious<cr>
-nnoremap <leader>at :ALEToggle<cr>
-nnoremap <leader>aa :ALECodeAction<cr>
-nnoremap <leader>al :ALELint<cr>
-nnoremap <leader>ah :ALEHover<cr>
-nnoremap <leader>ad :ALEGoToDefinition<cr>
-nnoremap <leader>au :ALEFindReferences<cr>
-nnoremap <leader>ar :ALERename<cr>
-nnoremap <leader>as :ALESymbolSearch 
-nnoremap <leader>ai :ALEInfo<cr> 
-nnoremap <leader>aq :ALEPopulateQuickfix<cr>
+"nnoremap <C-n> :ALENext<cr>
+"nnoremap <C-p> :ALEPrevious<cr>
+"nnoremap <leader>at :ALEToggle<cr>
+"nnoremap <leader>aa :ALECodeAction<cr>
+"nnoremap <leader>al :ALELint<cr>
+"nnoremap <leader>ah :ALEHover<cr>
+"nnoremap <leader>ad :ALEGoToDefinition<cr>
+"nnoremap <leader>au :ALEFindReferences<cr>
+"nnoremap <leader>ar :ALERename<cr>
+"nnoremap <leader>as :ALESymbolSearch 
+"nnoremap <leader>ai :ALEInfo<cr> 
+"nnoremap <leader>aq :ALEPopulateQuickfix<cr>
 
 " Codeium
 imap <script><silent><nowait><expr> <C-g> codeium#Accept()
@@ -166,10 +219,11 @@ endif
 
 call plug#begin()
 "	Plug 'regpab/pathy.vim'
-	Plug 'dense-analysis/ale'
+"	Plug 'dense-analysis/ale'
 	Plug 'Exafunction/codeium.vim'
-	Plug 'hsanson/vim-android'
-	Plug 'https://github.com/pimalaya/himalaya-vim'
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"	Plug 'hsanson/vim-android'
+"	Plug 'https://github.com/pimalaya/himalaya-vim'
 "	Plug 'sainnhe/everforest'
 call plug#end()
 
@@ -184,12 +238,14 @@ let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_filetype_changed = 0
 let g:ale_lint_on_save = 1
+let g:ale_history_log_output = 1
+let g:ale_debug = 1
+let g:ale_completion_enabled = 1
+let g:ale_hover_to_floating_preview = 1
 
 "let g:ale_java_eclipselsp_path = '$HOME/jdt-language-server'
 "let g:ale_java_eclipselsp_executable = '/usr/libexec/java'
 "let g:ale_completion_autoimport = 1
-"let g:ale_completion_enabled = 1
-"let g:ale_hover_to_floating_preview = 1
 "let g:gradle_loclist_show = 0
 "let g:gradle_show_signs = 0
 "let g:ale_linters = {
@@ -208,6 +264,7 @@ let g:ale_lint_on_save = 1
 "\     'compiler': { 'jvm': { 'target': '17' } },  
 "\   },
 "\}
+let g:coc_global_config="$HOME/.config/coc/coc-settings.json"
 
 let g:codeium_disable_bindings = 1
 let g:codeium_enabled = v:false

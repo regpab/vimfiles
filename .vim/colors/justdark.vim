@@ -49,7 +49,7 @@ hi Title ctermfg=3
 
 hi MatchParen ctermfg=9 ctermbg=0
 hi Directory ctermfg=2
-hi CursorLine ctermfg=2 ctermbg=0*
+hi CursorLine ctermfg=10 ctermbg=0 cterm=none
 hi EndOfBuffer ctermfg=2
 hi ErrorMsg ctermfg=2* ctermbg=NONE
 hi Folded ctermfg=9 ctermbg=0
