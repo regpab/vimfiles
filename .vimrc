@@ -20,6 +20,9 @@ set splitbelow splitright
 let g:netrw_banner=0
 let g:netrw_liststyle=1
 
+" Default to not read-only in vimdiff
+set noro
+
 colorscheme justdark
 
 set foldmethod=marker
@@ -80,10 +83,10 @@ function! ALEState() abort
 	endif
 	return g:ale_enabled ? " [ALE]" : ""
 endfunction
-set statusline+=\%{CodeiumState()}
-function! CodeiumState() abort
-	return g:codeium_enabled ? " [CODEIUM]" : ""
-endfunction
+"set statusline+=\%{CodeiumState()}
+"function! CodeiumState() abort
+"	return g:codeium_enabled ? " [CODEIUM]" : ""
+"endfunction
 " }}}
 
 " ru keys {{{
@@ -201,12 +204,12 @@ nnoremap <leader>ai :ALEInfo<cr>
 nnoremap <leader>aq :ALEPopulateQuickfix<cr>
 
 " Codeium
-imap <script><silent><nowait><expr> <C-g> codeium#Accept()
-imap <script><silent><nowait><expr> <C-h> codeium#AcceptNextWord()
-imap <script><silent><nowait><expr> <C-l> codeium#AcceptNextLine()
-imap <C-j>   <Cmd>call codeium#CycleCompletions(1)<CR>
-imap <C-k>   <Cmd>call codeium#CycleCompletions(-1)<CR>
-imap <C-x>   <Cmd>call codeium#Clear()<CR>
+" imap <script><silent><nowait><expr> <C-g> codeium#Accept()
+" imap <script><silent><nowait><expr> <C-h> codeium#AcceptNextWord()
+" imap <script><silent><nowait><expr> <C-l> codeium#AcceptNextLine()
+" imap <C-j>   <Cmd>call codeium#CycleCompletions(1)<CR>
+" imap <C-k>   <Cmd>call codeium#CycleCompletions(-1)<CR>
+" imap <C-x>   <Cmd>call codeium#Clear()<CR>
 " }}}
 
 " abbreviations {{{
@@ -234,12 +237,14 @@ endif
 call plug#begin()
 "	Plug 'regpab/pathy.vim'
 	Plug 'dense-analysis/ale'
+	Plug 'morhetz/gruvbox'
 "	Plug 'prabirshrestha/vim-lsp'
-	Plug 'Exafunction/codeium.vim'
+"	Plug 'Exafunction/codeium.vim'
 "	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "	Plug 'hsanson/vim-android'
 "	Plug 'https://github.com/pimalaya/himalaya-vim'
 "	Plug 'sainnhe/everforest'
+	Plug 'madox2/vim-ai'
 call plug#end()
 
 " plugins setup
@@ -252,7 +257,9 @@ call plug#end()
 "let g:coc_rust_analyzer_check_on_save = 0
 "let g:coc_rust_analyzer_cargo_watch_enable = 0
 
+"colorscheme gruvbox
 set omnifunc=ale#completion#OmniFunc
+let g:ale_enabled = 1
 let g:ale_enable_lsp = 1
 let g:ale_sign_column_always = 1
 let g:ale_set_highlights = 0
@@ -260,9 +267,10 @@ let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '--'
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_insert_leave = 0
-let g:ale_lint_on_enter = 0
+let g:ale_lint_on_enter = 1
 let g:ale_lint_on_filetype_changed = 0
-let g:ale_lint_on_save = 0
+let g:ale_lint_on_save = 1
+let g:ale_set_balloons = 0
 "let g:ale_history_log_output = 1
 "let g:ale_debug = 1
 "let g:ale_completion_enabled = 1
@@ -273,7 +281,9 @@ let g:ale_lint_on_save = 0
 let g:ale_completion_autoimport = 1
 "let g:gradle_loclist_show = 0
 "let g:gradle_show_signs = 0
-"let g:ale_linters = {
+let g:ale_linters = {
+\   'rust': ['analyzer'],
+\}
 "     \ 'xml': ['android'],
 "     \ 'groovy': ['android'],
 "     \ 'java': ['android', 'checkstyle', 'eclipselsp'],
@@ -288,8 +298,8 @@ let g:ale_completion_autoimport = 1
 "\   'kotlin': {
 "\     'compiler': { 'jvm': { 'target': '17' } },  
 "\   },
-let g:codeium_disable_bindings = 1
-let g:codeium_enabled = v:false
+" let g:codeium_disable_bindings = 1
+" let g:codeium_enabled = v:false
 
 " To run everforest:
 " if has('termguicolors')
@@ -299,7 +309,9 @@ let g:codeium_enabled = v:false
 "set background=dark
 "colorscheme everforest
 
-let g:android_sdk_path="$HOME/Library/Android/sdk"
+" let g:android_sdk_path="$HOME/Library/Android/sdk"
+
+
 " }}}
 
 " search {{{
