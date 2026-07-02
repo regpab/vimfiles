@@ -131,9 +131,53 @@ noremap <c-k> <c-w>k
 noremap <leader>cy "+y
 noremap <leader>cp "+p
 
+function! TerminalToQuickfix()
+    let g:cargo_output_lines = []
+
+    " Force cargo to disable colored ANSI outputs so the raw text stays clean
+    let l:cmd = &shell . ' ' . &shellcmdflag . ' "CARGO_TERM_COLOR=never cargo check --message-format=short 2>&1"'
+
+    " term_finish: 'close' tells Vim to auto-destruct the window when cargo finishes
+    let l:term_buf = term_start(l:cmd, {
+        \ 'term_rows': 10,
+        \ 'term_finish': 'close',
+        \ 'exit_cb': 'TermExitHandler'
+        \ })
+
+    let l:job = term_getjob(l:term_buf)
+    call ch_setoptions(l:job, {
+        \ 'out_cb': 'FilterRustErrors',
+        \ 'err_cb': 'FilterRustErrors'
+        \ })
+endfunction
+
+function! FilterRustErrors(ch, msg)
+    if a:msg =~# 'error\['
+        let l:clean_msg = substitute(a:msg, '\r', '', 'g')
+        call add(g:cargo_output_lines, l:clean_msg)
+    endif
+endfunction
+
+function! TermExitHandler(job, status)
+    " 1. Push our clean text entries directly into the quickfix list
+    cgetexpr g:cargo_output_lines
+    
+    " 2. Clean up the global array from memory
+    unlet! g:cargo_output_lines
+
+    " 3. Only pop open the quickfix window if we actually caught errors!
+    if !empty(getqflist())
+        copen
+    else
+        echo "Cargo check: No errors found!"
+    endif
+endfunction
+
+nnoremap <Leader>cm :call TerminalToQuickfix()<CR>
+
 " build
-autocmd FileType rust set makeprg=cargo\ check\ --message-format\ short
-nnoremap <leader>cm :make<cr>
+"autocmd FileType rust set makeprg=cargo\ check\ --message-format=short
+" nnoremap <silent> <leader>cm :cexpr system('cargo check --message-format=short 2>&1 <bar> grep "error\["') <bar> copen<cr>
 nnoremap <leader>cc :Ccheck<cr>
 nnoremap <leader>cb :Cbuild<cr>
 nnoremap <leader>cr :Crun<cr>
@@ -244,7 +288,6 @@ call plug#begin()
 "	Plug 'hsanson/vim-android'
 "	Plug 'https://github.com/pimalaya/himalaya-vim'
 "	Plug 'sainnhe/everforest'
-	Plug 'madox2/vim-ai'
 call plug#end()
 
 " plugins setup
@@ -259,7 +302,7 @@ call plug#end()
 
 "colorscheme gruvbox
 set omnifunc=ale#completion#OmniFunc
-let g:ale_enabled = 1
+let g:ale_enabled = 0
 let g:ale_enable_lsp = 1
 let g:ale_sign_column_always = 1
 let g:ale_set_highlights = 0
@@ -267,9 +310,9 @@ let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '--'
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_insert_leave = 0
-let g:ale_lint_on_enter = 1
+let g:ale_lint_on_enter = 0
 let g:ale_lint_on_filetype_changed = 0
-let g:ale_lint_on_save = 1
+let g:ale_lint_on_save = 0
 let g:ale_set_balloons = 0
 "let g:ale_history_log_output = 1
 "let g:ale_debug = 1
